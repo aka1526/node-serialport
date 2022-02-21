@@ -5,3 +5,6 @@ npm i -g @serialport/list
 npm i -g @serialport/terminal
 npm i -g @serialport/stream
 npm i -g @serialport/parser-regex
+
+// 
+https://serialport.io/docs/guide-usage
