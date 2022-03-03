@@ -29,6 +29,7 @@ port.open(function(err) {
 // Switches the port into "flowing mode"
 port.on('data', function(data) {
     broadcast(data)
+    getdatatbale()
         // console.log('Data:', data)
 })
 
@@ -66,6 +67,15 @@ function broadcast(data) {
     // console.log('broadcast: ' + data);
     for (myConnection in connections) {
         connections[myConnection].send(data + ' ');
-        // connections[myConnection].send(JSON.stringify(data));
+        //connections[myConnection].send(JSON.stringify(data, JSON_UNESCAPED_UNICODE));
+    }
+}
+
+function getdatatbale() {
+    var aka = 'akachai';
+    // console.log('broadcast: ' + data);
+    for (myConnection in connections) {
+        connections[myConnection].send(aka + ' ');
+        //connections[myConnection].send(JSON.stringify(data, JSON_UNESCAPED_UNICODE));
     }
 }

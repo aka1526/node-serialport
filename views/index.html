@@ -18,6 +18,7 @@
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/bootstrap.bundle.js"></script>
     <script src="./js/all.min.js"></script>
+
     <title>โปรแกรมเครื่องชั่ง นับชิ้นงาน</title>
 
     <script language="javascript" type="text/javascript">
@@ -50,8 +51,10 @@
         }
 
         function onMessage(evt) {
-            writeToScreen('<span style = "color: blue;">RESPONSE: ' + evt.data + '</span>');
+            // writeToScreen('<span style = "color: blue;">RESPONSE: ' + evt.data + '</span>');
             writeToShow(evt.data);
+            // console.log(evt.data);
+            console.log(evt);
         }
 
         function onError(evt) {
@@ -76,13 +79,19 @@
             var PerPcs = 2500;
             var Weight_box = parseInt($("#TOTAL_WEIGHT_BOX").val()) > 0 ? parseInt($("#TOTAL_WEIGHT_BOX").val()) : 0;;
             var Total_pcs = 0;
+
+            $("#total_weight").val(Total_Weight);
             if (Total_Weight > 0) {
                 Total_pcs = (Total_Weight - Weight_box) / PerPcs;
                 Total_pcs = parseInt(Total_pcs);
                 $("#TOTAL_PCS").val(Total_pcs);
                 $("#TOTAL_NET_QTY").val(Total_pcs);
+                $("#total_weight_qty").val(Total_pcs);
 
                 setLabelColor(Total_pcs, 1000);
+                getQtyDiff();
+
+                getData();
                 /*if (Total_pcs < 5) {
                     $("#SHOW_TOTAL_PCS").attr('class', 'badge badge-secondary btn-block');
                 } else if (Total_pcs < 1000) {
@@ -121,26 +130,26 @@
         function getWeightBox() {
 
             var WEIGHT_BOX = parseInt($("#WEIGHT_BOX").val());
-            var BOX_QTY = parseInt($("#BOX_QTY").val());
+            var BOX_QTY = parseInt($("#total_box").val());
             var TOTAL_WEIGHT_BOX = WEIGHT_BOX;
 
             if (WEIGHT_BOX > 0 && BOX_QTY > 0) {
                 TOTAL_WEIGHT_BOX = WEIGHT_BOX * BOX_QTY;
             }
-            $("#TOTAL_WEIGHT_BOX").val(TOTAL_WEIGHT_BOX);
+            $("#total_box_weight").val(TOTAL_WEIGHT_BOX);
             //console.log('uuuu' + TOTAL_WEIGHT_BOX);
         }
 
         function getQtyDiff() {
 
-            var TOTAL_INV_QTY = parseInt($("#TOTAL_INV_QTY").val());
-            var TOTAL_NET_QTY = parseInt($("#TOTAL_NET_QTY").val());
+            var TOTAL_INV_QTY = parseInt($("#total_qty").val());
+            var TOTAL_NET_QTY = parseInt($("#total_weight_qty").val());
             var TOTAL_DIFF_QTY = 0;
             if (TOTAL_INV_QTY > 0) {
                 TOTAL_DIFF_QTY = TOTAL_INV_QTY - TOTAL_NET_QTY;
             }
 
-            $("#TOTAL_DIFF_QTY").val(TOTAL_DIFF_QTY);
+            $("#total_weight_diff").val(TOTAL_DIFF_QTY);
 
         }
 
@@ -173,23 +182,33 @@
 
                 <h3 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">น้ำหนักชั่ง</span>
+
+                    <input type="hidden" id="total_weight" name="total_weight" value="">
+
+
                     <span class="badge badge-secondary" id="get_weight" style="width: 150px;font-weight: 800;font-size: 2rem;">0</span>
                 </h3>
                 <table width="100%">
                     <tr>
                         <td width="45%">น้ำหนักBOX</td>
                         <td>=</td>
-                        <td width="45%" align="right"><input type="number" class="form-control col-md-6" id="WEIGHT_BOX" name="WEIGHT_BOX" onchange="getWeightBox();" placeholder="" min="1" value="1500" required></td>
+                        <td width="45%" align="right">
+                            <input type="number" class="form-control col-md-6" id="WEIGHT_BOX" name="WEIGHT_BOX" onchange="getWeightBox();" placeholder="" min="1" value="1500" required>
+                        </td>
                     </tr>
                     <tr>
                         <td width="45%">จำนวนBOX</td>
                         <td>=</td>
-                        <td width="45%" align="right"> <input type="number" class="form-control col-md-6" id="BOX_QTY" name="BOX_QTY" onchange="getWeightBox();" placeholder="" min="1" max="10" value="1"></td>
+                        <td width="45%" align="right">
+                            <input type="number" class="form-control col-md-6" id="total_box" name="total_box" onchange="getWeightBox();" placeholder="" min="1" max="10" value="1">
+                        </td>
                     </tr>
                     <tr>
                         <td width="45%">คิดเป็นน้ำหนัก BOX</td>
                         <td>=</td>
-                        <td width="45%" align="right"> <input type="number" class="form-control col-md-6" id="TOTAL_WEIGHT_BOX" name="TOTAL_WEIGHT_BOX" onchange="getWeightBox();" min="0" value="0"></td>
+                        <td width="45%" align="right">
+                            <input type="number" class="form-control col-md-6" id="total_box_weight" name="total_box_weight" onchange="getWeightBox();" min="0" value="0">
+                        </td>
                     </tr>
                     <tr>
                         <td width="45%">น้ำหนักต่อชิ้นงาน</td>
@@ -197,7 +216,7 @@
                         <td width="45%" align="right"> <input type="number" class="form-control col-md-6" id="WEIGHT_PER_PCS" name="WEIGHT_PER_PCS" min="0" value="1500"></td>
                     </tr>
                     <tr>
-                        <td colspan="3">จำนวนชิ้นงาน <input type="hidden" class="form-control col-md-6" id="TOTAL_PCS" name="TOTAL_PCS" min="0"></td>
+                        <td colspan="3">จำนวนชิ้นงานที่ชั่งได้ <input type="hidden" class="form-control col-md-6" id="TOTAL_PCS" name="TOTAL_PCS" min="0"></td>
                     </tr>
                     <tr>
                         <td colspan="3"><span class="badge badge-success btn-block" id="SHOW_TOTAL_PCS" name="SHOW_TOTAL_PCS" style="width: 100%;font-weight: 800;font-size: 4rem;">0</span></td>
@@ -233,110 +252,183 @@
             </div>
             <div class="col-md-8 order-md-1">
 
-                <form id="frm" name="frm" class="needs-validation" novalidate>
+                <form id="frm" name="frm" class="needs-validation" method="post">
 
                     <div class="mb-3">
-                        <label for="username"><h4>Scan Tag Qrcode</h4></label>
+                        <label for="SCAN_QRCODE"><h4>Scan Tag Qrcode</h4></label>
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">@</span>
-                            </div>
-                            <input type="text" class="form-control" id="username" placeholder="Scan Qrcode" autocomplete="off" required>
+
+                            <input type="text" class="form-control form-control-sm" id="SCAN_QRCODE" name="SCAN_QRCODE" placeholder="Scan Qrcode" autocomplete="off" value="222222222" required>
                             <div class="invalid-feedback" style="width: 100%;">
                                 Scan Qrcode
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="firstName">Product Code</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" autocomplete="off" required>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_code">Product Code</label>
+                            <input type="text" class="form-control form-control-sm" id="product_code" name="product_code" placeholder="" value="222222222" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastName">Product Name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" autocomplete="off" required>
+                        <div class="col-md-4 mb-3">
+                            <label for="product_name">Product Name</label>
+                            <input type="text" class="form-control form-control-sm" id="product_name" name="product_name" placeholder="" value="222222222" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid last name is required.
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="mb-3">
+                                <label for="mat_lot_no">Material Lot No. </label>
+                                <input type="text" class="form-control form-control-sm" id="mat_lot_no" name="mat_lot_no" placeholder="Material Lot No." value="222222222" autocomplete="off" required>
+                                <div class="invalid-feedback">
+                                    Please enter your shipping address.
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+
+                        <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label for="address">Material Lot No. </label>
-                                <input type="text" class="form-control" id="address" placeholder="Material Lot No." autocomplete="off" required>
+                                <label for="invoice_no">เลขที่เอกสาร</label>
+                                <input type="text" class="form-control form-control-sm" id="invoice_no" name="invoice_no" placeholder="เลขที่เอกสาร" autocomplete="off" value="222222222" required>
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label for="address">เลขที่เอกสาร/Invoice</label>
-                                <input type="text" class="form-control" id="address" placeholder="เลขที่เอกสาร" autocomplete="off" required>
+                                <label for="total_qty">ชิ้นงานทั้งหมด</label>
+                                <input type="number" class="form-control form-control-sm" id="total_qty" name="total_qty" onchange="getQtyDiff();" placeholder="0" autocomplete="off" value="15000" required>
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label for="address">จำนวนชิ้นงานตามเอกสาร</label>
-                                <input type="number" class="form-control" id="TOTAL_INV_QTY" name="TOTAL_INV_QTY" onchange="getQtyDiff();" placeholder="0" autocomplete="off" required>
+                                <label for="total_weight_qty">จำนวนชิ้นงาน</label>
+                                <input type="number" class="form-control form-control-sm" id="total_weight_qty" name="total_weight_qty" onchange="getQtyDiff();" placeholder="0" autocomplete="off" min="0" required readonly>
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <div class="mb-3">
-                                <label for="address">จำนวนชิ้นงานที่ชั่งได้</label>
-                                <input type="number" class="form-control" id="TOTAL_NET_QTY" name="TOTAL_NET_QTY" onchange="getQtyDiff();" placeholder="0" autocomplete="off" min="0" required readonly>
-                                <div class="invalid-feedback">
-                                    Please enter your shipping address.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="mb-3">
-                                <label for="address">จำนวนชิ้นงานขาด/เกิน</label>
-                                <input type="number" class="form-control" id="TOTAL_DIFF_QTY" name="TOTAL_DIFF_QTY" placeholder="0" autocomplete="off" required readonly>
+                                <label for="total_weight_diff">งานขาด/เกิน</label>
+                                <input type="number" class="form-control  form-control-sm" id="total_weight_diff" name="total_weight_diff" placeholder="0" autocomplete="off" required readonly>
                                 <div class="invalid-feedback">
                                     Please enter your shipping address.
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">บันทึกข้อมูล</button>
+                    <button class="btn btn-primary btn-lg btn-block btn-save" type="submit">บันทึกข้อมูล</button>
                 </form>
             </div>
         </div>
 
+        <div class="row">
+            <table class="table table-bordered table-sm" id="myTable">
+                <thead>
+                    <tr class="bg-info">
+                        <th scope="col">วันที่-เวลา</th>
+                        <th scope="col">Product Code</th>
+                        <th scope="col">Product name</th>
+                        <th scope="col">Material Lot</th>
+                        <th scope="col">เลขที่เอกสาร</th>
+                        <th scope="col">ชิ้นงานทั้งหมด</th>
+                        <th scope="col">จำนวนชิ้นงาน</th>
+                        <th scope="col">งานขาด/เกิน</th>
+                        <th scope="col">น้ำหนักรวม</th>
+                    </tr>
+                </thead>
+                <tbody class="">
 
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS 
+                </tbody>
+            </table>
+
+        </div>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     -->
 
-    <script>
-        $(document).ready(function() {
-            getWeightBox();
-        });
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function() {
+                getWeightBox();
+            });
+
+            function getData() {
+
+                $.ajax({
+                    url: 'http://192.168.110.69:5000/getdata',
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        var row = '';
+                        $(".rowitem").html('');
+                        $.each(data.json, function(index) {
+
+                            var val = data.json[index];
+                            row += '<tr class="rowitem">';
+                            row += '<td>' + dateFormat(val.createdAt) + '</td>';
+                            row += '<td>' + val.product_code + '</td>';
+                            row += '<td>' + val.product_name + '</td>';
+                            row += '<td>' + val.mat_lot_no + '</td>';
+                            row += '<td>' + val.invoice_no + '</td>';
+                            row += '<td>' + val.total_weight + '</td>';
+                            row += '<td>' + val.total_qty + '</td>';
+                            row += '<td>' + val.total_weight_diff + '</td>';
+                            row += '<td>' + val.total_weight_qty + '</td>';
+                            row += '</tr>';
+                        });
+
+                        $('#myTable').append(row);
+
+                    }
+                });
+
+            }
+
+            const dateFormat = (dateFromDB) => {
+                var dateValue = new Date(dateFromDB);
+                return dateValue.getDate() + '-' + ('00' + (dateValue.getMonth() + 1)).slice(-2) + '-' + dateValue.getFullYear() + ' ' + dateValue.getHours() + ':' + ('00' + (dateValue.getMinutes())).slice(-2) + ':' + ('00' + (dateValue.getSeconds())).slice(-2);
+            }
 
 
-        $(document).on("click", '.btn-warning', function(e) {
+            $(document).on("click", '.btn-save', function(e) {
+                e.preventDefault();
+                var product_code = $("#product_code").val();
 
-            alert('dsfsdf');
+                var url = "http://192.168.110.69:5000/api/add";
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "product_code": product_code,
 
-        });
-    </script>
+                    }),
+                    success: function() {
+
+                    },
+                    error: function() {
+
+                    }
+                });
+
+            });
+        </script>
 
 </body>
 
