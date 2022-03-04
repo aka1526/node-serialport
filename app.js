@@ -35,6 +35,8 @@ app.use('/js', express.static(path.join(_dirname, 'node_modules/bootstrap/dist/j
 app.use('/js', express.static(path.join(_dirname, 'node_modules/jquery/dist')))
 app.use('/js', express.static(path.join(_dirname, 'node_modules/popper.js/dist')))
 app.use('/js', express.static(path.join(_dirname, 'node_modules/@fortawesome/fontawesome-free/js')))
+app.use('/views/box/', express.static(path.join(_dirname, 'views/box')))
+app.use('/webfonts', express.static(path.join(_dirname, 'webfonts')))
 
 
 app.get("/", (req, res) => {
@@ -47,8 +49,6 @@ app.get("/getdata", (req, res) => {
 
     var date1 = new Date();
     var deleteDate = dateAdd('day', -30, date1);
-
-
     Weight.destroy({
         where: {
             createdAt: {

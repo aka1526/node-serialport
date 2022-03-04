@@ -1,0 +1,5 @@
+ST,GS   10.07,kg
+ST,GS   10.07,kg
+ST,GS   10.07,kg
+ST,GS   10.07,kg
+ST,GS   10.07,kg

@@ -31,6 +31,8 @@ port.open(function(err) {
 port.on('data', function(data) {
     broadcast(data)
 
+
+
     // console.log('Data:', data)
 })
 
@@ -40,10 +42,15 @@ port.on('data', function(data) {
 wss.on('connection', function connection(client) {
     console.log("connected to " + client._socket.remoteAddress + " on port " + SERVER_PORT)
     connections.push(client);
-    client.on('message', function(data) {
-        port.write(data)
-        console.log('WS received : ' + data)
-    })
+
+    setInterval(() => {
+        client.on('message', function(data) {
+            port.write(data)
+            console.log('WS received : ' + data)
+        })
+    }, 3000)
+
+
 
     client.on('close', function() {
         console.log("connection closed");
@@ -83,8 +90,12 @@ function broadcast(data) {
     //});
 
 
+    //setInterval(() => {
     for (myConnection in connections) {
         connections[myConnection].send(data + ' ');
         // connections[myConnection].send(JSON.stringify(data));
     }
+    //}, 3000)
+
+
 }

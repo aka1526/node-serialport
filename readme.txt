@@ -1,4 +1,9 @@
 npm install
+npm i express
+npm i sequelize
+npm i sqlite3
+npm i serialport
+npm i dotenv
 npm i -g serialport
 npm i -g @serialport/parser-readline
 npm i -g @serialport/list
